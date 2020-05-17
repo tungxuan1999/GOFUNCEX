@@ -1,29 +1,59 @@
 package main
 
 import (
+	"context"
+	"crypto/ecdsa"
+	"fmt"
 	"log"
-	"net/http"
-	"os"
+	"math/big"
 
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		log.Fatal("$PORT must be set")
+	client, err := ethclient.Dial("http://localhost:9545")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	router := gin.New()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
+	privateKey, err := crypto.HexToECDSA("...")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("error casting public key to ECDSA")
+	}
 
-	router.Run(":" + port)
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	auth := bind.NewKeyedTransactor(privateKey)
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)     // in wei
+	auth.GasLimit = uint64(300000) // in units
+	auth.GasPrice = gasPrice
+
+	input := "1.0"
+	address, tx, instance, err := DeployStore(auth, client, input)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(address.Hex())
+	fmt.Println(tx.Hash().Hex())
+
+	_ = instance
 }
