@@ -11,6 +11,14 @@ github.com/manucorporat/sse
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.0-20150814002629-7fcbc72f853b
 github.com/mattn/go-isatty
+github.com/ethereum/go-ethereum
+	github.com/ethereum/go-ethereum/accounts/abi
+	github.com/ethereum/go-ethereum/accounts/abi/bind
+	github.com/ethereum/go-ethereum/common
+	github.com/ethereum/go-ethereum/core/types
+	github.com/ethereum/go-ethereum/event
+	github.com/ethereum/go-ethereum/crypto
+	github.com/ethereum/go-ethereum/ethclient
 # golang.org/x/net v0.0.0-20150629084131-d9558e5c97f8
 golang.org/x/net/context
 # gopkg.in/bluesuncorp/validator.v5 v5.9.1
