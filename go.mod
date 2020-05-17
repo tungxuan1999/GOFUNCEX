@@ -9,6 +9,14 @@ require (
 	github.com/mattn/go-colorable v0.0.0-20150625154642-40e4aedc8fab // indirect
 	github.com/mattn/go-isatty v0.0.0-20150814002629-7fcbc72f853b // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
+	github.com/ethereum/go-ethereum
+	github.com/ethereum/go-ethereum/accounts/abi
+	github.com/ethereum/go-ethereum/accounts/abi/bind
+	github.com/ethereum/go-ethereum/common
+	github.com/ethereum/go-ethereum/core/types
+	github.com/ethereum/go-ethereum/event
+	github.com/ethereum/go-ethereum/crypto
+	github.com/ethereum/go-ethereum/ethclient
 	golang.org/x/net v0.0.0-20150629084131-d9558e5c97f8 // indirect
 	gopkg.in/bluesuncorp/validator.v5 v5.9.1 // indirect
 )
